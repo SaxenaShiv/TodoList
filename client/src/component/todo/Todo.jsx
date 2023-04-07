@@ -241,7 +241,7 @@ const Todo = () => {
           onConfirm={() => {
             request
               .delete(
-                `http://localhost:3001/api/v1/todo/${record._id}/`
+                `https://todolist-app-giyd.onrender.com/api/v1/todo/${record._id}/`
               )
               .then(() => {
                 ref.current.reload();
@@ -270,7 +270,7 @@ const Todo = () => {
         columns={columns}
         request={async (params = {}, sort, filter) => {
           const data = await request(
-            "http://localhost:3001/api/v1/todo/",
+            "https://todolist-app-giyd.onrender.com/api/v1/todo/",
             {
               params: {
                 ...params,

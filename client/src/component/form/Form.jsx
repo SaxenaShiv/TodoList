@@ -18,7 +18,7 @@ const Form = ({ tableRef }) => {
       values.tags = temp;
     }
     try {
-      await request.post(`http://localhost:3001/api/v1/todo`, {
+      await request.post(`https://todolist-app-giyd.onrender.com/api/v1/todo`, {
         data: values,
       });
       tableRef.current.reload();
