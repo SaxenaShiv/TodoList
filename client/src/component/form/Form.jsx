@@ -17,6 +17,7 @@ const Form = ({ tableRef }) => {
       const temp = values.tags.split(",");
       values.tags = temp;
     }
+    // posting new todo
     try {
       await request.post(`https://todolist-app-giyd.onrender.com/api/v1/todo`, {
         data: values,
@@ -42,6 +43,7 @@ const Form = ({ tableRef }) => {
         destroyOnClose: true,
         onCancel: () => {},
       }}
+      // submit button handle
       onFinish={(values) => {
         handleSubmit(values);
         return true;

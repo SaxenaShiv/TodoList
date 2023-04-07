@@ -42,7 +42,7 @@ const Todo = () => {
     setSearchedColumn(dataIndex);
     
   };
-
+//  searching todos logic implemented on each column
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -99,6 +99,7 @@ const Todo = () => {
       }
     },
     render: (text) =>
+    // search highlight
       searchedColumn === dataIndex ? (
         <Highlighter
           highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
@@ -241,7 +242,7 @@ const Todo = () => {
           onConfirm={() => {
             request
               .delete(
-                `https://todolist-app-giyd.onrender.com/api/v1/todo/${record._id}/`
+                `http://localhost:3001/api/v1/todo/${record._id}`
               )
               .then(() => {
                 ref.current.reload();
@@ -269,8 +270,9 @@ const Todo = () => {
         actionRef={ref}
         columns={columns}
         request={async (params = {}, sort, filter) => {
-          const data = await request(
-            "https://todolist-app-giyd.onrender.com/api/v1/todo/",
+          // getting data from data base
+          const response = await request(
+            "https://todolist-app-giyd.onrender.com/api/v1/todo",
             {
               params: {
                 ...params,
@@ -279,6 +281,7 @@ const Todo = () => {
               },
             }
           );
+          const data = response.data;
           console.log("Fetched data:", data);
           return {
             data: data,
@@ -286,6 +289,7 @@ const Todo = () => {
             total: data.length,
           };
         }}
+        
         scroll={{ x: "max-content" }}
         style={{ padding: "20px 30px" }}
         rowKey="_id" // Change 'id' to '_id'
@@ -296,11 +300,23 @@ const Todo = () => {
         }}
         dateFormatter="string"
         headerTitle="Todo List"
+        // saving record after edit
         editable={{
           type: "multiple",
           editableKeys,
           onSave: async (rowKey, data, row) => {
-            // ... rest of the onSave implementation
+            try {
+              await request.put(`https://todolist-app-giyd.onrender.com/api/v1/todo/${rowKey}`, {
+                data,
+              });
+              message.success("Record updated successfully!");
+              ref.current.reload();
+            } catch (error) {
+              console.error(error);
+              message.error(
+                "Failed to update the record. Please check the console for more information."
+              );
+            }
           },
           onCancel: async (rowKey, data, row) => {},
           onChange: setEditableRowKeys,
